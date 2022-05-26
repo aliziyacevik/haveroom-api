@@ -1,15 +1,20 @@
 package main
 
 import (
+	"net/http"
+
 	"log"
 
-	"github.com/alicevvikk/haveroom-api/api/server"
+	"github.com/go-chi/chi/v5"
+
 )
 
 func main() {
+	r := chi.NewRouter()
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hello world"))
 
-	srv := server.NewServer("./config/config.yaml")
-	log.Println("listening..")
-	srv.Run()
+	})
 
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
