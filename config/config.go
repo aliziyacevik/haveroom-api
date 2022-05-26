@@ -2,26 +2,26 @@ package config
 
 import (
 	"os"
-	"gopkg.in/yaml.v2
+	"log"
+	"gopkg.in/yaml.v2"
 )
-
 
 type Config struct {
 	Server struct {
-		Host:		`yaml:	"host", 	envconfig: "SERVER_HOST"`
-		Port:		`yaml:  "port", 	envconfig: "SERVER_PORT"`
-		ReadTimeout:	`yaml:	"readTimeout",  envconfig: "READ_TIMEOUT"`
-		WriteTimeout:	`yaml:	"writeTimeout"  envconfig: "WRITE_TIMEOUT"`
+		Host	      string	`yaml:"host", 	envconfig: "SERVER_HOST"`
+		Port	      string	`yaml:"port", 	envconfig: "SERVER_PORT"`
+		ReadTimeout   int64	`yaml:"readTimeout",  envconfig: "READ_TIMEOUT"`
+		WriteTimeout  int64	`yaml:"writeTimeout",  envconfig: "WRITE_TIMEOUT"`
 	
 	}	`yaml: "server"`
 
 }
 
 
-func NewConfig(configFile string) (*Config, error) {
+func NewConfig(configFile string) *Config {
 	file, err := os.Open(configFile)
 	if err != nil {
-		return nil, err
+		log.Fatal("Can't open config file. Are you sure it's there ?")
 	}
 	defer file.Close()
 	
@@ -30,8 +30,8 @@ func NewConfig(configFile string) (*Config, error) {
 	err = yd.Decode(cfg)
 
 	if err != nil {
-		return nil, err
+		log.Fatal("Error while decoding config file. Exiting the application..")
 	}
 
-	return cfg, nil
+	return cfg
 }
